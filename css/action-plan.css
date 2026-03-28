@@ -1,0 +1,302 @@
+/* css/action-plan.css */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 30px;
+    background: #ffffff;
+    color: #2c3e50;
+}
+
+/* Header Styles */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 4px solid #2c3e50;
+    padding: 20px;
+}
+
+.header h1 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 28px;
+}
+
+.header p {
+    color: #7f8c8d;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Action Buttons */
+.action-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    margin-bottom: 20px;
+}
+
+.action-btn:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.action-btn.save {
+    background: #27ae60;
+}
+
+.action-btn.save:hover {
+    background: #229954;
+}
+
+.action-btn.close {
+    background: #95a5a6;
+}
+
+.action-btn.close:hover {
+    background: #7f8c8d;
+}
+
+/* Status Container */
+.cont-two {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin: 15px 0 25px 0;
+}
+
+.cont-two > *{
+    flex: 1;
+}
+
+/* Status Buttons */
+.status-btn {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    padding: 5px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-weight: normal;
+    border-radius: 0;
+}
+
+.status-btn.thick-border {
+    border: 3px solid black;
+    font-weight: bold;
+}
+
+/* Table Container */
+.table-container {
+    overflow-x: auto;
+    margin: 25px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.table-container p {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background: white;
+}
+
+th {
+    background: #2c3e50;
+    color: white;
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: 600;
+    border: 1px solid #34495e;
+    white-space: nowrap;
+}
+
+td {
+    padding: 12px 8px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+/* Input Fields */
+.input-field {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: border-color 0.3s;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52,152,219,0.3);
+}
+
+textarea.input-field {
+    min-height: 60px;
+    resize: vertical;
+}
+
+/* Footer */
+.footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 11px;
+    padding: 20px;
+    border-top: 2px solid #ecf0f1;
+}
+
+/* No Print Class */
+@media print {
+    .no-print {
+        display: none;
+    }
+    body {
+        margin: 0.5in;
+    }
+    table {
+        break-inside: auto;
+    }
+    tr {
+        break-inside: avoid;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        margin: 15px;
+    }
+    
+    .cont-two {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    th, td {
+        padding: 8px 4px;
+        font-size: 11px;
+    }
+}
+
+/* Signature Section Styles - Centered */
+.signature-section {
+    margin-top: 60px;
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 400px; /* Adjust this width as needed */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.signature-label {
+    font-weight: bold;
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.signature-line {
+    font-weight: bold;
+    font-size: 15px;
+    color: #333;
+    width: 100%;
+    height: 30px; /* Space for signature */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.signature-role {
+    font-weight: bold;
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+}
+
+/* Alternative: If you want it left-aligned but the text under the line centered */
+.signature-section.left-aligned {
+    margin-left: 0;
+    margin-right: 0;
+    text-align: left;
+}
+
+.signature-section.left-aligned .signature-role {
+    text-align: left;
+}
+
+/* Print styles for signature */
+
+
+/* Update existing table title style */
+.table-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin: 15px 0 5px 0;
+    color: #1E3A5F;
+}
+
+/* Status and categories container */
+.status-categories-container {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin: 15px 0;
+    border-radius: 5px;
+}
+
+.status-section, .categories-section {
+    margin: 5px 0;
+    font-size: 12px;
+}
+
+/* Open actions container */
+.open-actions-container {
+    margin: 10px 0;
+    font-weight: bold;
+    color: #1E3A5F;
+}
+
+/* Add row button container */
+.add-row-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Ensure tables print well */
+@media print {
+    .no-print {
+        display: none;
+    }
+}

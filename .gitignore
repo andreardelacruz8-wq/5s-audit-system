@@ -1,0 +1,23 @@
+@"
+# Dependencies
+node_modules/
+package-lock.json
+package.json
+test-excel.js
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Logs
+*.log
+
+# Other
+*.pdf
+"@ | Out-File -FilePath .gitignore -Encoding utf8

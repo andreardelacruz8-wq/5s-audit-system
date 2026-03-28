@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office 5S Action Plan</title>
+    
+    <!-- Security Headers - UPDATED to allow inline handlers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-hashes'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data:;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/action-plan.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- XLSX Library for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <!-- Buttons at top right - REMOVED onclick attributes -->
+    <div class="button-container no-print">
+        <button class="action-btn save" id="save-btn">
+            <i class="fas fa-save"></i> Save Action Plan
+        </button>
+        <button class="action-btn close" id="close-btn">
+            <i class="fas fa-times"></i> Close
+        </button>
+    </div>
+    
+    <!-- Header -->
+    <div class="header">
+        <h1>OFFICE 5S ACTION PLAN</h1>
+        <p><strong>Area Audited:</strong> <span id="area-audited">__________________</span></p>
+        <p><strong>5S Point Person:</strong> <span id="point-person">_________________</span></p>
+        <p><strong>Date:</strong> <span id="audit-date"></span></p>
+    </div>
+    
+    <!-- Open Actions -->
+    <div class="cont-two">
+        <strong>There are <span id="open-actions"><b>0</b></span> open actions items.</strong>
+        <strong>There are <span id="sort-count">0</span> Sort, <span id="systematize-count">0</span> Systematize, <span id="sweep-count">0</span> Sweep, <span id="standardize-count">0</span> Standardize, <span id="discipline-count">0</span> Self-Discipline findings.</strong>
+    </div>
+    
+    <!-- Status and Categories -->
+    <div class="cont-two">
+        <span><strong>Status:</strong> O - Open     C - Closed</span>
+        <span><strong>Categories:</strong> S1 - Sort, S2 - Systematize, S3 - Sweep, S4 - Standardize, S5 - Self-Discipline</span>
+    </div>
+    
+    <!-- Previous Audit Table -->
+    <div class="table-container">
+        <p>Previous Audit</p>
+        <table>
+            <thead>
+                <tr>
+                    <th width="8%">Date of Audit</th>
+                    <th width="8%">Ref. Criteria</th>
+                    <th width="30%">Description</th>
+                    <th width="5%">No. of Findings</th>
+                    <th width="8%">Date</th>
+                    <th width="8%">Status</th>
+                    <th width="8%">For Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="q1.1">Sort 1</option>
+                            <option value="q1.2">Sort 2</option>
+                            <option value="q1.3">Sort 3</option>
+                            <option value="q1.4">Sort 4</option>
+                            <option value="q1.5">Sort 5</option>
+                            <option value="q1.6">Sort 6</option>
+                            <option value="q1.7">Sort 7</option>
+                            <option value="q1.8">Sort 8</option>
+                            <option value="q1.9">Sort 9</option>
+                            <option value="q1.10">Sort 10</option>
+                            <option value="q1.11">Sort 11</option>
+                            <option value="q1.12">Sort 12</option>
+                            <option value="q2.1">Systematize 1</option>
+                            <option value="q2.2">Systematize 2</option>
+                            <option value="q2.3">Systematize 3</option>
+                            <option value="q2.4">Systematize 4</option>
+                            <option value="q2.5">Systematize 5</option>
+                            <option value="q2.6">Systematize 6</option>
+                            <option value="q2.7">Systematize 7</option>
+                            <option value="q2.8">Systematize 8</option>
+                            <option value="q2.9">Systematize 9</option>
+                            <option value="q2.10">Systematize 10</option>
+                            <option value="q2.11">Systematize 11</option>
+                            <option value="q2.12">Systematize 12</option>
+                            <option value="q2.13">Systematize 13</option>
+                            <option value="q3.1">Sweep 1</option>
+                            <option value="q3.2">Sweep 2</option>
+                            <option value="q3.3">Sweep 3</option>
+                            <option value="q3.4">Sweep 4</option>
+                            <option value="q3.5">Sweep 5</option>
+                            <option value="q3.6">Sweep 6</option>
+                            <option value="q3.7">Sweep 7</option>
+                            <option value="q3.8">Sweep 8</option>
+                            <option value="q3.9">Sweep 9</option>
+                            <option value="q3.10">Sweep 10</option>
+                            <option value="q4.1">Standardize 1</option>
+                            <option value="q4.2">Standardize 2</option>
+                            <option value="q4.3">Standardize 3</option>
+                            <option value="q4.4">Standardize 4</option>
+                            <option value="q4.5">Standardize 5</option>
+                            <option value="q4.6">Standardize 6</option>
+                            <option value="q4.7">Standardize 7</option>
+                            <option value="q5.1">Self-discipline 1</option>
+                            <option value="q5.2">Self-discipline 2</option>
+                            <option value="q5.3">Self-discipline 3</option>
+                            <option value="q5.4">Self-discipline 4</option>
+                            <option value="q5.5">Self-discipline 5</option>
+                            <option value="q5.6">Self-discipline 6</option>
+                            <option value="q5.7">Self-discipline 7</option>
+                            <option value="q5.8">Self-discipline 8</option>
+                            <option value="q5.9">Self-discipline 9</option>
+                            <option value="q5.10">Self-discipline 10</option>
+                            <option value="q5.11">Self-discipline 11</option>
+                            <option value="q5.12">Self-discipline 12</option>
+                        </select>
+                    </td>
+                    <td><textarea class="input-field"></textarea></td>
+                    <td><input type="number" class="input-field" min="0"></td>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="open">O</option>
+                            <option value="close">C</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="ma">Maintenance Unit</option>
+                            <option value="au">Auditee</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="q1.1">Sort 1</option>
+                            <option value="q1.2">Sort 2</option>
+                            <option value="q1.3">Sort 3</option>
+                            <option value="q1.4">Sort 4</option>
+                            <option value="q1.5">Sort 5</option>
+                            <option value="q1.6">Sort 6</option>
+                            <option value="q1.7">Sort 7</option>
+                            <option value="q1.8">Sort 8</option>
+                            <option value="q1.9">Sort 9</option>
+                            <option value="q1.10">Sort 10</option>
+                            <option value="q1.11">Sort 11</option>
+                            <option value="q1.12">Sort 12</option>
+                            <option value="q2.1">Systematize 1</option>
+                            <option value="q2.2">Systematize 2</option>
+                            <option value="q2.3">Systematize 3</option>
+                            <option value="q2.4">Systematize 4</option>
+                            <option value="q2.5">Systematize 5</option>
+                            <option value="q2.6">Systematize 6</option>
+                            <option value="q2.7">Systematize 7</option>
+                            <option value="q2.8">Systematize 8</option>
+                            <option value="q2.9">Systematize 9</option>
+                            <option value="q2.10">Systematize 10</option>
+                            <option value="q2.11">Systematize 11</option>
+                            <option value="q2.12">Systematize 12</option>
+                            <option value="q2.13">Systematize 13</option>
+                            <option value="q3.1">Sweep 1</option>
+                            <option value="q3.2">Sweep 2</option>
+                            <option value="q3.3">Sweep 3</option>
+                            <option value="q3.4">Sweep 4</option>
+                            <option value="q3.5">Sweep 5</option>
+                            <option value="q3.6">Sweep 6</option>
+                            <option value="q3.7">Sweep 7</option>
+                            <option value="q3.8">Sweep 8</option>
+                            <option value="q3.9">Sweep 9</option>
+                            <option value="q3.10">Sweep 10</option>
+                            <option value="q4.1">Standardize 1</option>
+                            <option value="q4.2">Standardize 2</option>
+                            <option value="q4.3">Standardize 3</option>
+                            <option value="q4.4">Standardize 4</option>
+                            <option value="q4.5">Standardize 5</option>
+                            <option value="q4.6">Standardize 6</option>
+                            <option value="q4.7">Standardize 7</option>
+                            <option value="q5.1">Self-discipline 1</option>
+                            <option value="q5.2">Self-discipline 2</option>
+                            <option value="q5.3">Self-discipline 3</option>
+                            <option value="q5.4">Self-discipline 4</option>
+                            <option value="q5.5">Self-discipline 5</option>
+                            <option value="q5.6">Self-discipline 6</option>
+                            <option value="q5.7">Self-discipline 7</option>
+                            <option value="q5.8">Self-discipline 8</option>
+                            <option value="q5.9">Self-discipline 9</option>
+                            <option value="q5.10">Self-discipline 10</option>
+                            <option value="q5.11">Self-discipline 11</option>
+                            <option value="q5.12">Self-discipline 12</option>
+                        </select>
+                    </td>
+                    <td><textarea class="input-field"></textarea></td>
+                    <td><input type="number" class="input-field" min="0"></td>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="open">O</option>
+                            <option value="close">C</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="ma">Maintenance Unit</option>
+                            <option value="au">Auditee</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="no-print" style="text-align: center; margin-top: 20px;">
+            <button class="action-btn add-row-btn">
+                <i class="fas fa-plus"></i> Add New Row
+            </button>
+        </div>
+    </div>
+
+    <!-- First Quarter Table -->
+    <div class="table-container">
+        <p>First Quarter</p>
+        <table>
+            <thead>
+                <tr>
+                    <th width="8%">Date of Audit</th>
+                    <th width="8%">Ref. Criteria</th>
+                    <th width="30%">Description</th>
+                    <th width="5%">No. of Findings</th>
+                    <th width="8%">Date</th>
+                    <th width="8%">Status</th>
+                    <th width="8%">For Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="q1.1">Sort 1</option>
+                            <option value="q1.2">Sort 2</option>
+                            <option value="q1.3">Sort 3</option>
+                            <option value="q1.4">Sort 4</option>
+                            <option value="q1.5">Sort 5</option>
+                            <option value="q1.6">Sort 6</option>
+                            <option value="q1.7">Sort 7</option>
+                            <option value="q1.8">Sort 8</option>
+                            <option value="q1.9">Sort 9</option>
+                            <option value="q1.10">Sort 10</option>
+                            <option value="q1.11">Sort 11</option>
+                            <option value="q1.12">Sort 12</option>
+                            <option value="q2.1">Systematize 1</option>
+                            <option value="q2.2">Systematize 2</option>
+                            <option value="q2.3">Systematize 3</option>
+                            <option value="q2.4">Systematize 4</option>
+                            <option value="q2.5">Systematize 5</option>
+                            <option value="q2.6">Systematize 6</option>
+                            <option value="q2.7">Systematize 7</option>
+                            <option value="q2.8">Systematize 8</option>
+                            <option value="q2.9">Systematize 9</option>
+                            <option value="q2.10">Systematize 10</option>
+                            <option value="q2.11">Systematize 11</option>
+                            <option value="q2.12">Systematize 12</option>
+                            <option value="q2.13">Systematize 13</option>
+                            <option value="q3.1">Sweep 1</option>
+                            <option value="q3.2">Sweep 2</option>
+                            <option value="q3.3">Sweep 3</option>
+                            <option value="q3.4">Sweep 4</option>
+                            <option value="q3.5">Sweep 5</option>
+                            <option value="q3.6">Sweep 6</option>
+                            <option value="q3.7">Sweep 7</option>
+                            <option value="q3.8">Sweep 8</option>
+                            <option value="q3.9">Sweep 9</option>
+                            <option value="q3.10">Sweep 10</option>
+                            <option value="q4.1">Standardize 1</option>
+                            <option value="q4.2">Standardize 2</option>
+                            <option value="q4.3">Standardize 3</option>
+                            <option value="q4.4">Standardize 4</option>
+                            <option value="q4.5">Standardize 5</option>
+                            <option value="q4.6">Standardize 6</option>
+                            <option value="q4.7">Standardize 7</option>
+                            <option value="q5.1">Self-discipline 1</option>
+                            <option value="q5.2">Self-discipline 2</option>
+                            <option value="q5.3">Self-discipline 3</option>
+                            <option value="q5.4">Self-discipline 4</option>
+                            <option value="q5.5">Self-discipline 5</option>
+                            <option value="q5.6">Self-discipline 6</option>
+                            <option value="q5.7">Self-discipline 7</option>
+                            <option value="q5.8">Self-discipline 8</option>
+                            <option value="q5.9">Self-discipline 9</option>
+                            <option value="q5.10">Self-discipline 10</option>
+                            <option value="q5.11">Self-discipline 11</option>
+                            <option value="q5.12">Self-discipline 12</option>
+                        </select>
+                    </td>
+                    <td><textarea class="input-field"></textarea></td>
+                    <td><input type="number" class="input-field" min="0"></td>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="open">O</option>
+                            <option value="close">C</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="ma">Maintenance Unit</option>
+                            <option value="au">Auditee</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="q1.1">Sort 1</option>
+                            <option value="q1.2">Sort 2</option>
+                            <option value="q1.3">Sort 3</option>
+                            <option value="q1.4">Sort 4</option>
+                            <option value="q1.5">Sort 5</option>
+                            <option value="q1.6">Sort 6</option>
+                            <option value="q1.7">Sort 7</option>
+                            <option value="q1.8">Sort 8</option>
+                            <option value="q1.9">Sort 9</option>
+                            <option value="q1.10">Sort 10</option>
+                            <option value="q1.11">Sort 11</option>
+                            <option value="q1.12">Sort 12</option>
+                            <option value="q2.1">Systematize 1</option>
+                            <option value="q2.2">Systematize 2</option>
+                            <option value="q2.3">Systematize 3</option>
+                            <option value="q2.4">Systematize 4</option>
+                            <option value="q2.5">Systematize 5</option>
+                            <option value="q2.6">Systematize 6</option>
+                            <option value="q2.7">Systematize 7</option>
+                            <option value="q2.8">Systematize 8</option>
+                            <option value="q2.9">Systematize 9</option>
+                            <option value="q2.10">Systematize 10</option>
+                            <option value="q2.11">Systematize 11</option>
+                            <option value="q2.12">Systematize 12</option>
+                            <option value="q2.13">Systematize 13</option>
+                            <option value="q3.1">Sweep 1</option>
+                            <option value="q3.2">Sweep 2</option>
+                            <option value="q3.3">Sweep 3</option>
+                            <option value="q3.4">Sweep 4</option>
+                            <option value="q3.5">Sweep 5</option>
+                            <option value="q3.6">Sweep 6</option>
+                            <option value="q3.7">Sweep 7</option>
+                            <option value="q3.8">Sweep 8</option>
+                            <option value="q3.9">Sweep 9</option>
+                            <option value="q3.10">Sweep 10</option>
+                            <option value="q4.1">Standardize 1</option>
+                            <option value="q4.2">Standardize 2</option>
+                            <option value="q4.3">Standardize 3</option>
+                            <option value="q4.4">Standardize 4</option>
+                            <option value="q4.5">Standardize 5</option>
+                            <option value="q4.6">Standardize 6</option>
+                            <option value="q4.7">Standardize 7</option>
+                            <option value="q5.1">Self-discipline 1</option>
+                            <option value="q5.2">Self-discipline 2</option>
+                            <option value="q5.3">Self-discipline 3</option>
+                            <option value="q5.4">Self-discipline 4</option>
+                            <option value="q5.5">Self-discipline 5</option>
+                            <option value="q5.6">Self-discipline 6</option>
+                            <option value="q5.7">Self-discipline 7</option>
+                            <option value="q5.8">Self-discipline 8</option>
+                            <option value="q5.9">Self-discipline 9</option>
+                            <option value="q5.10">Self-discipline 10</option>
+                            <option value="q5.11">Self-discipline 11</option>
+                            <option value="q5.12">Self-discipline 12</option>
+                        </select>
+                    </td>
+                    <td><textarea class="input-field"></textarea></td>
+                    <td><input type="number" class="input-field" min="0"></td>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="open">O</option>
+                            <option value="close">C</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="ma">Maintenance Unit</option>
+                            <option value="au">Auditee</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="no-print" style="text-align: center; margin-top: 20px;">
+            <button class="action-btn add-row-btn">
+                <i class="fas fa-plus"></i> Add New Row
+            </button>
+        </div>
+    </div>
+
+    <!-- Second Quarter Table -->
+    <div class="table-container">
+        <p>Second Quarter</p>
+        <table>
+            <thead>
+                <tr>
+                    <th width="8%">Date of Audit</th>
+                    <th width="8%">Ref. Criteria</th>
+                    <th width="30%">Description</th>
+                    <th width="5%">No. of Findings</th>
+                    <th width="8%">Date</th>
+                    <th width="8%">Status</th>
+                    <th width="8%">For Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="q1.1">Sort 1</option>
+                            <option value="q1.2">Sort 2</option>
+                            <option value="q1.3">Sort 3</option>
+                            <option value="q1.4">Sort 4</option>
+                            <option value="q1.5">Sort 5</option>
+                            <option value="q1.6">Sort 6</option>
+                            <option value="q1.7">Sort 7</option>
+                            <option value="q1.8">Sort 8</option>
+                            <option value="q1.9">Sort 9</option>
+                            <option value="q1.10">Sort 10</option>
+                            <option value="q1.11">Sort 11</option>
+                            <option value="q1.12">Sort 12</option>
+                            <option value="q2.1">Systematize 1</option>
+                            <option value="q2.2">Systematize 2</option>
+                            <option value="q2.3">Systematize 3</option>
+                            <option value="q2.4">Systematize 4</option>
+                            <option value="q2.5">Systematize 5</option>
+                            <option value="q2.6">Systematize 6</option>
+                            <option value="q2.7">Systematize 7</option>
+                            <option value="q2.8">Systematize 8</option>
+                            <option value="q2.9">Systematize 9</option>
+                            <option value="q2.10">Systematize 10</option>
+                            <option value="q2.11">Systematize 11</option>
+                            <option value="q2.12">Systematize 12</option>
+                            <option value="q2.13">Systematize 13</option>
+                            <option value="q3.1">Sweep 1</option>
+                            <option value="q3.2">Sweep 2</option>
+                            <option value="q3.3">Sweep 3</option>
+                            <option value="q3.4">Sweep 4</option>
+                            <option value="q3.5">Sweep 5</option>
+                            <option value="q3.6">Sweep 6</option>
+                            <option value="q3.7">Sweep 7</option>
+                            <option value="q3.8">Sweep 8</option>
+                            <option value="q3.9">Sweep 9</option>
+                            <option value="q3.10">Sweep 10</option>
+                            <option value="q4.1">Standardize 1</option>
+                            <option value="q4.2">Standardize 2</option>
+                            <option value="q4.3">Standardize 3</option>
+                            <option value="q4.4">Standardize 4</option>
+                            <option value="q4.5">Standardize 5</option>
+                            <option value="q4.6">Standardize 6</option>
+                            <option value="q4.7">Standardize 7</option>
+                            <option value="q5.1">Self-discipline 1</option>
+                            <option value="q5.2">Self-discipline 2</option>
+                            <option value="q5.3">Self-discipline 3</option>
+                            <option value="q5.4">Self-discipline 4</option>
+                            <option value="q5.5">Self-discipline 5</option>
+                            <option value="q5.6">Self-discipline 6</option>
+                            <option value="q5.7">Self-discipline 7</option>
+                            <option value="q5.8">Self-discipline 8</option>
+                            <option value="q5.9">Self-discipline 9</option>
+                            <option value="q5.10">Self-discipline 10</option>
+                            <option value="q5.11">Self-discipline 11</option>
+                            <option value="q5.12">Self-discipline 12</option>
+                        </select>
+                    </td>
+                    <td><textarea class="input-field"></textarea></td>
+                    <td><input type="number" class="input-field" min="0"></td>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="open">O</option>
+                            <option value="close">C</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="ma">Maintenance Unit</option>
+                            <option value="au">Auditee</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="q1.1">Sort 1</option>
+                            <option value="q1.2">Sort 2</option>
+                            <option value="q1.3">Sort 3</option>
+                            <option value="q1.4">Sort 4</option>
+                            <option value="q1.5">Sort 5</option>
+                            <option value="q1.6">Sort 6</option>
+                            <option value="q1.7">Sort 7</option>
+                            <option value="q1.8">Sort 8</option>
+                            <option value="q1.9">Sort 9</option>
+                            <option value="q1.10">Sort 10</option>
+                            <option value="q1.11">Sort 11</option>
+                            <option value="q1.12">Sort 12</option>
+                            <option value="q2.1">Systematize 1</option>
+                            <option value="q2.2">Systematize 2</option>
+                            <option value="q2.3">Systematize 3</option>
+                            <option value="q2.4">Systematize 4</option>
+                            <option value="q2.5">Systematize 5</option>
+                            <option value="q2.6">Systematize 6</option>
+                            <option value="q2.7">Systematize 7</option>
+                            <option value="q2.8">Systematize 8</option>
+                            <option value="q2.9">Systematize 9</option>
+                            <option value="q2.10">Systematize 10</option>
+                            <option value="q2.11">Systematize 11</option>
+                            <option value="q2.12">Systematize 12</option>
+                            <option value="q2.13">Systematize 13</option>
+                            <option value="q3.1">Sweep 1</option>
+                            <option value="q3.2">Sweep 2</option>
+                            <option value="q3.3">Sweep 3</option>
+                            <option value="q3.4">Sweep 4</option>
+                            <option value="q3.5">Sweep 5</option>
+                            <option value="q3.6">Sweep 6</option>
+                            <option value="q3.7">Sweep 7</option>
+                            <option value="q3.8">Sweep 8</option>
+                            <option value="q3.9">Sweep 9</option>
+                            <option value="q3.10">Sweep 10</option>
+                            <option value="q4.1">Standardize 1</option>
+                            <option value="q4.2">Standardize 2</option>
+                            <option value="q4.3">Standardize 3</option>
+                            <option value="q4.4">Standardize 4</option>
+                            <option value="q4.5">Standardize 5</option>
+                            <option value="q4.6">Standardize 6</option>
+                            <option value="q4.7">Standardize 7</option>
+                            <option value="q5.1">Self-discipline 1</option>
+                            <option value="q5.2">Self-discipline 2</option>
+                            <option value="q5.3">Self-discipline 3</option>
+                            <option value="q5.4">Self-discipline 4</option>
+                            <option value="q5.5">Self-discipline 5</option>
+                            <option value="q5.6">Self-discipline 6</option>
+                            <option value="q5.7">Self-discipline 7</option>
+                            <option value="q5.8">Self-discipline 8</option>
+                            <option value="q5.9">Self-discipline 9</option>
+                            <option value="q5.10">Self-discipline 10</option>
+                            <option value="q5.11">Self-discipline 11</option>
+                            <option value="q5.12">Self-discipline 12</option>
+                        </select>
+                    </td>
+                    <td><textarea class="input-field"></textarea></td>
+                    <td><input type="number" class="input-field" min="0"></td>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="open">O</option>
+                            <option value="close">C</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="ma">Maintenance Unit</option>
+                            <option value="au">Auditee</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="no-print" style="text-align: center; margin-top: 20px;">
+            <button class="action-btn add-row-btn">
+                <i class="fas fa-plus"></i> Add New Row
+            </button>
+        </div>
+    </div>
+
+    <!-- Third Quarter Table -->
+    <div class="table-container">
+        <p>Third Quarter</p>
+        <table>
+            <thead>
+                <tr>
+                    <th width="8%">Date of Audit</th>
+                    <th width="8%">Ref. Criteria</th>
+                    <th width="30%">Description</th>
+                    <th width="5%">No. of Findings</th>
+                    <th width="8%">Date</th>
+                    <th width="8%">Status</th>
+                    <th width="8%">For Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="q1.1">Sort 1</option>
+                            <option value="q1.2">Sort 2</option>
+                            <option value="q1.3">Sort 3</option>
+                            <option value="q1.4">Sort 4</option>
+                            <option value="q1.5">Sort 5</option>
+                            <option value="q1.6">Sort 6</option>
+                            <option value="q1.7">Sort 7</option>
+                            <option value="q1.8">Sort 8</option>
+                            <option value="q1.9">Sort 9</option>
+                            <option value="q1.10">Sort 10</option>
+                            <option value="q1.11">Sort 11</option>
+                            <option value="q1.12">Sort 12</option>
+                            <option value="q2.1">Systematize 1</option>
+                            <option value="q2.2">Systematize 2</option>
+                            <option value="q2.3">Systematize 3</option>
+                            <option value="q2.4">Systematize 4</option>
+                            <option value="q2.5">Systematize 5</option>
+                            <option value="q2.6">Systematize 6</option>
+                            <option value="q2.7">Systematize 7</option>
+                            <option value="q2.8">Systematize 8</option>
+                            <option value="q2.9">Systematize 9</option>
+                            <option value="q2.10">Systematize 10</option>
+                            <option value="q2.11">Systematize 11</option>
+                            <option value="q2.12">Systematize 12</option>
+                            <option value="q2.13">Systematize 13</option>
+                            <option value="q3.1">Sweep 1</option>
+                            <option value="q3.2">Sweep 2</option>
+                            <option value="q3.3">Sweep 3</option>
+                            <option value="q3.4">Sweep 4</option>
+                            <option value="q3.5">Sweep 5</option>
+                            <option value="q3.6">Sweep 6</option>
+                            <option value="q3.7">Sweep 7</option>
+                            <option value="q3.8">Sweep 8</option>
+                            <option value="q3.9">Sweep 9</option>
+                            <option value="q3.10">Sweep 10</option>
+                            <option value="q4.1">Standardize 1</option>
+                            <option value="q4.2">Standardize 2</option>
+                            <option value="q4.3">Standardize 3</option>
+                            <option value="q4.4">Standardize 4</option>
+                            <option value="q4.5">Standardize 5</option>
+                            <option value="q4.6">Standardize 6</option>
+                            <option value="q4.7">Standardize 7</option>
+                            <option value="q5.1">Self-discipline 1</option>
+                            <option value="q5.2">Self-discipline 2</option>
+                            <option value="q5.3">Self-discipline 3</option>
+                            <option value="q5.4">Self-discipline 4</option>
+                            <option value="q5.5">Self-discipline 5</option>
+                            <option value="q5.6">Self-discipline 6</option>
+                            <option value="q5.7">Self-discipline 7</option>
+                            <option value="q5.8">Self-discipline 8</option>
+                            <option value="q5.9">Self-discipline 9</option>
+                            <option value="q5.10">Self-discipline 10</option>
+                            <option value="q5.11">Self-discipline 11</option>
+                            <option value="q5.12">Self-discipline 12</option>
+                        </select>
+                    </td>
+                    <td><textarea class="input-field"></textarea></td>
+                    <td><input type="number" class="input-field" min="0"></td>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="open">O</option>
+                            <option value="close">C</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="ma">Maintenance Unit</option>
+                            <option value="au">Auditee</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="q1.1">Sort 1</option>
+                            <option value="q1.2">Sort 2</option>
+                            <option value="q1.3">Sort 3</option>
+                            <option value="q1.4">Sort 4</option>
+                            <option value="q1.5">Sort 5</option>
+                            <option value="q1.6">Sort 6</option>
+                            <option value="q1.7">Sort 7</option>
+                            <option value="q1.8">Sort 8</option>
+                            <option value="q1.9">Sort 9</option>
+                            <option value="q1.10">Sort 10</option>
+                            <option value="q1.11">Sort 11</option>
+                            <option value="q1.12">Sort 12</option>
+                            <option value="q2.1">Systematize 1</option>
+                            <option value="q2.2">Systematize 2</option>
+                            <option value="q2.3">Systematize 3</option>
+                            <option value="q2.4">Systematize 4</option>
+                            <option value="q2.5">Systematize 5</option>
+                            <option value="q2.6">Systematize 6</option>
+                            <option value="q2.7">Systematize 7</option>
+                            <option value="q2.8">Systematize 8</option>
+                            <option value="q2.9">Systematize 9</option>
+                            <option value="q2.10">Systematize 10</option>
+                            <option value="q2.11">Systematize 11</option>
+                            <option value="q2.12">Systematize 12</option>
+                            <option value="q2.13">Systematize 13</option>
+                            <option value="q3.1">Sweep 1</option>
+                            <option value="q3.2">Sweep 2</option>
+                            <option value="q3.3">Sweep 3</option>
+                            <option value="q3.4">Sweep 4</option>
+                            <option value="q3.5">Sweep 5</option>
+                            <option value="q3.6">Sweep 6</option>
+                            <option value="q3.7">Sweep 7</option>
+                            <option value="q3.8">Sweep 8</option>
+                            <option value="q3.9">Sweep 9</option>
+                            <option value="q3.10">Sweep 10</option>
+                            <option value="q4.1">Standardize 1</option>
+                            <option value="q4.2">Standardize 2</option>
+                            <option value="q4.3">Standardize 3</option>
+                            <option value="q4.4">Standardize 4</option>
+                            <option value="q4.5">Standardize 5</option>
+                            <option value="q4.6">Standardize 6</option>
+                            <option value="q4.7">Standardize 7</option>
+                            <option value="q5.1">Self-discipline 1</option>
+                            <option value="q5.2">Self-discipline 2</option>
+                            <option value="q5.3">Self-discipline 3</option>
+                            <option value="q5.4">Self-discipline 4</option>
+                            <option value="q5.5">Self-discipline 5</option>
+                            <option value="q5.6">Self-discipline 6</option>
+                            <option value="q5.7">Self-discipline 7</option>
+                            <option value="q5.8">Self-discipline 8</option>
+                            <option value="q5.9">Self-discipline 9</option>
+                            <option value="q5.10">Self-discipline 10</option>
+                            <option value="q5.11">Self-discipline 11</option>
+                            <option value="q5.12">Self-discipline 12</option>
+                        </select>
+                    </td>
+                    <td><textarea class="input-field"></textarea></td>
+                    <td><input type="number" class="input-field" min="0"></td>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="open">O</option>
+                            <option value="close">C</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="ma">Maintenance Unit</option>
+                            <option value="au">Auditee</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="no-print" style="text-align: center; margin-top: 20px;">
+            <button class="action-btn add-row-btn">
+                <i class="fas fa-plus"></i> Add New Row
+            </button>
+        </div>
+    </div>
+
+    <!-- Fourth Quarter Table -->
+    <div class="table-container">
+        <p>Fourth Quarter</p>
+        <table>
+            <thead>
+                <tr>
+                    <th width="8%">Date of Audit</th>
+                    <th width="8%">Ref. Criteria</th>
+                    <th width="30%">Description</th>
+                    <th width="5%">No. of Findings</th>
+                    <th width="8%">Date</th>
+                    <th width="8%">Status</th>
+                    <th width="8%">For Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="q1.1">Sort 1</option>
+                            <option value="q1.2">Sort 2</option>
+                            <option value="q1.3">Sort 3</option>
+                            <option value="q1.4">Sort 4</option>
+                            <option value="q1.5">Sort 5</option>
+                            <option value="q1.6">Sort 6</option>
+                            <option value="q1.7">Sort 7</option>
+                            <option value="q1.8">Sort 8</option>
+                            <option value="q1.9">Sort 9</option>
+                            <option value="q1.10">Sort 10</option>
+                            <option value="q1.11">Sort 11</option>
+                            <option value="q1.12">Sort 12</option>
+                            <option value="q1.13">Sort 13</option>
+                            <option value="q2.1">Systematize 5</option>
+                            <option value="q2.2">Systematize 6</option>
+                            <option value="q2.3">Systematize 7</option>
+                            <option value="q2.4">Systematize 8</option>
+                            <option value="q2.5">Systematize 9</option>
+                            <option value="q2.6">Systematize 10</option>
+                            <option value="q2.7">Systematize 11</option>
+                            <option value="q2.8">Systematize 12</option>
+                            <option value="q2.9">Systematize 13</option>
+                            <option value="q3.1">Sweep 1</option>
+                            <option value="q3.2">Sweep 2</option>
+                            <option value="q3.3">Sweep 3</option>
+                            <option value="q3.4">Sweep 4</option>
+                            <option value="q3.5">Sweep 5</option>
+                            <option value="q3.6">Sweep 6</option>
+                            <option value="q3.7">Sweep 7</option>
+                            <option value="q3.8">Sweep 8</option>
+                            <option value="q3.9">Sweep 9</option>
+                            <option value="q3.10">Sweep 10</option>
+                            <option value="q4.1">Standardize 1</option>
+                            <option value="q4.2">Standardize 2</option>
+                            <option value="q4.3">Standardize 3</option>
+                            <option value="q4.4">Standardize 4</option>
+                            <option value="q4.5">Standardize 5</option>
+                            <option value="q4.6">Standardize 6</option>
+                            <option value="q4.7">Standardize 7</option>
+                            <option value="q5.1">Self-discipline 1</option>
+                            <option value="q5.2">Self-discipline 2</option>
+                            <option value="q5.3">Self-discipline 3</option>
+                            <option value="q5.4">Self-discipline 4</option>
+                            <option value="q5.5">Self-discipline 5</option>
+                            <option value="q5.6">Self-discipline 6</option>
+                            <option value="q5.7">Self-discipline 7</option>
+                            <option value="q5.8">Self-discipline 8</option>
+                            <option value="q5.9">Self-discipline 9</option>
+                            <option value="q5.10">Self-discipline 10</option>
+                            <option value="q5.11">Self-discipline 11</option>
+                            <option value="q5.12">Self-discipline 12</option>
+                        </select>
+                    </td>
+                    <td><textarea class="input-field"></textarea></td>
+                    <td><input type="number" class="input-field" min="0"></td>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="open">O</option>
+                            <option value="close">C</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="ma">Maintenance Unit</option>
+                            <option value="au">Auditee</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="q1.1">Sort 1</option>
+                            <option value="q1.2">Sort 2</option>
+                            <option value="q1.3">Sort 3</option>
+                            <option value="q1.4">Sort 4</option>
+                            <option value="q1.5">Sort 5</option>
+                            <option value="q1.6">Sort 6</option>
+                            <option value="q1.7">Sort 7</option>
+                            <option value="q1.8">Sort 8</option>
+                            <option value="q1.9">Sort 9</option>
+                            <option value="q1.10">Sort 10</option>
+                            <option value="q1.11">Sort 11</option>
+                            <option value="q1.12">Sort 12</option>
+                            <option value="q2.1">Systematize 1</option>
+                            <option value="q2.2">Systematize 2</option>
+                            <option value="q2.3">Systematize 3</option>
+                            <option value="q2.4">Systematize 4</option>
+                            <option value="q2.5">Systematize 5</option>
+                            <option value="q2.6">Systematize 6</option>
+                            <option value="q2.7">Systematize 7</option>
+                            <option value="q2.8">Systematize 8</option>
+                            <option value="q2.9">Systematize 9</option>
+                            <option value="q2.10">Systematize 10</option>
+                            <option value="q2.11">Systematize 11</option>
+                            <option value="q2.12">Systematize 12</option>
+                            <option value="q2.13">Systematize 13</option>
+                            <option value="q3.1">Sweep 1</option>
+                            <option value="q3.2">Sweep 2</option>
+                            <option value="q3.3">Sweep 3</option>
+                            <option value="q3.4">Sweep 4</option>
+                            <option value="q3.5">Sweep 5</option>
+                            <option value="q3.6">Sweep 6</option>
+                            <option value="q3.7">Sweep 7</option>
+                            <option value="q3.8">Sweep 8</option>
+                            <option value="q3.9">Sweep 9</option>
+                            <option value="q3.10">Sweep 10</option>
+                            <option value="q4.1">Standardize 1</option>
+                            <option value="q4.2">Standardize 2</option>
+                            <option value="q4.3">Standardize 3</option>
+                            <option value="q4.4">Standardize 4</option>
+                            <option value="q4.5">Standardize 5</option>
+                            <option value="q4.6">Standardize 6</option>
+                            <option value="q4.7">Standardize 7</option>
+                            <option value="q5.1">Self-discipline 1</option>
+                            <option value="q5.2">Self-discipline 2</option>
+                            <option value="q5.3">Self-discipline 3</option>
+                            <option value="q5.4">Self-discipline 4</option>
+                            <option value="q5.5">Self-discipline 5</option>
+                            <option value="q5.6">Self-discipline 6</option>
+                            <option value="q5.7">Self-discipline 7</option>
+                            <option value="q5.8">Self-discipline 8</option>
+                            <option value="q5.9">Self-discipline 9</option>
+                            <option value="q5.10">Self-discipline 10</option>
+                            <option value="q5.11">Self-discipline 11</option>
+                            <option value="q5.12">Self-discipline 12</option>
+                        </select>
+                    </td>
+                    <td><textarea class="input-field"></textarea></td>
+                    <td><input type="number" class="input-field" min="0"></td>
+                    <td><input type="date" class="input-field"></td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="open">O</option>
+                            <option value="close">C</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input-field">
+                            <option value=""></option>
+                            <option value="ma">Maintenance Unit</option>
+                            <option value="au">Auditee</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="no-print" style="text-align: center; margin-top: 20px;">
+            <button class="action-btn add-row-btn">
+                <i class="fas fa-plus"></i> Add New Row
+            </button>
+        </div>
+    </div>
+    
+    <!--signature-->
+    <div class="signature-section">
+        <div class="signature-label">Acknowledged by:</div>
+        <div class="signature-line">______________________________________</div>
+        <div class="signature-role">5S Point Person</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p><strong>Office 5S Action Plan</strong> - Fill in the items above to track your 5S improvement activities</p>
+        <p>Generated on: <span id="footer-date"></span></p>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="js/action-plan.js"></script>
+</body>
+</html>
