@@ -83,12 +83,12 @@
                 </div>
                 <div class="header-info">
                     <div class="info-log">
-                        <label for="auditorName"><i class="fas fa-user"></i> Auditor:</label>
-                        <input type="text" id="auditorName" placeholder="Enter your name">
+                        <label for="currentAuditor"><i class="fas fa-user"></i> Auditor (Current Quarter):</label>
+                        <input type="text" id="currentAuditor" placeholder="Enter auditor name for this quarter">
                     </div>
                     <div class="info-log">
                         <label for="department"><i class="fas fa-building"></i> Audit Area:</label>
-                        <input type="text"  id="department" placeholder="Enter Audit Area">
+                        <input type="text" id="department" placeholder="Enter Audit Area">
                     </div>
                     <div class="info-log">
                         <label for="auditDate"><i class="fas fa-calendar-alt"></i> Audit Date:</label>
@@ -121,7 +121,6 @@
 
         <!-- Quarter Content Container -->
         <div class="quarter-content-container">
-            <!-- Content will be dynamically loaded by JavaScript -->
             <div id="quarterContent"></div>
         </div>
         
@@ -139,7 +138,7 @@
             </button>
         </div>
 
-        <!-- Progress Summary - REPLACED WITH SHEET SUMMARY -->
+        <!-- Progress Summary -->
         <div class="progress-summary" id="sheetSummary">
             <div class="progress-header">
                 <h3><i class="fas fa-chart-bar"></i> Sheet Summary - 5S Performance Report</h3>
@@ -166,7 +165,7 @@
                             <td id="sort-q2">0.00</td>
                             <td id="sort-q3">0.00</td>
                             <td id="sort-q4">0.00</td>
-                            <td id="sort-avg" class="annual-average" data-category="sort">0.00</td>
+                            <td id="sort-avg" class="annual-average">0.00</td>
                         </tr>
                         <tr>
                             <td class="category-name"><i class="fas fa-th-large"></i> Systematize (Seiton)</td>
@@ -174,7 +173,7 @@
                             <td id="systematize-q2">0.00</td>
                             <td id="systematize-q3">0.00</td>
                             <td id="systematize-q4">0.00</td>
-                            <td id="systematize-avg" class="annual-average" data-category="systematize">0.00</td>
+                            <td id="systematize-avg" class="annual-average">0.00</td>
                         </tr>
                         <tr>
                             <td class="category-name"><i class="fas fa-broom"></i> Sweep (Seiso)</td>
@@ -182,7 +181,7 @@
                             <td id="sweep-q2">0.00</td>
                             <td id="sweep-q3">0.00</td>
                             <td id="sweep-q4">0.00</td>
-                            <td id="sweep-avg" class="annual-average" data-category="sweep">0.00</td>
+                            <td id="sweep-avg" class="annual-average">0.00</td>
                         </tr>
                         <tr>
                             <td class="category-name"><i class="fas fa-clipboard-list"></i> Standardize (Seiketsu)</td>
@@ -190,7 +189,7 @@
                             <td id="standardize-q2">0.00</td>
                             <td id="standardize-q3">0.00</td>
                             <td id="standardize-q4">0.00</td>
-                            <td id="standardize-avg" class="annual-average" data-category="standardize">0.00</td>
+                            <td id="standardize-avg" class="annual-average">0.00</td>
                         </tr>
                         <tr>
                             <td class="category-name"><i class="fas fa-trophy"></i> Self-Discipline (Shitsuke)</td>
@@ -198,7 +197,7 @@
                             <td id="discipline-q2">0.00</td>
                             <td id="discipline-q3">0.00</td>
                             <td id="discipline-q4">0.00</td>
-                            <td id="discipline-avg" class="annual-average" data-category="discipline">0.00</td>
+                            <td id="discipline-avg" class="annual-average">0.00</td>
                         </tr>
                         <tr class="total-row">
                             <td><strong>Total Average Score</strong></td>
@@ -226,17 +225,17 @@
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-            <button class="btn-action btn-save" onclick="saveCurrentQuarter()">
-                <i class="fas fa-save"></i> Save Quarter to Excel
-            </button>
             <button class="btn-action btn-excel" onclick="exportPhotoList()">
-                <i class="fas fa-images"></i>Export Photo Evidences
+                <i class="fas fa-images"></i>Photo Evidences
+            </button>
+            <button class="btn-action btn-save" onclick="showOfficeActionPlan()">
+                <i class="fas fa-print"></i> Office 5S Action Plan
+            </button>
+            <button class="btn-action btn-load" onclick="exportAuditResults('summary')">
+                <i class="fas fa-table"></i>Summary Report
             </button>
             <button class="btn-action btn-restart" onclick="restartAudit()">
                 <i class="fas fa-redo"></i> Reset
-            </button>
-            <button class="btn-action btn-load" onclick="showAuditResults()">
-                <i class="fas fa-folder-open"></i> Load/View Audit
             </button>
         </div>
 
@@ -257,23 +256,23 @@
                         <div class="auditors-list" id="auditorsList">
                             <div class="auditor-entry">
                                 <h3>Q1</h3>
-                                <input type="text" class="auditor-name" placeholder="Auditor name">
-                                <input type="date" class="auditor-date" placeholder="Date">
+                                <input type="text" class="auditor-name" readonly placeholder="Will auto-populate" style="background-color: #f5f5f5;">
+                                <input type="date" class="auditor-date" readonly style="background-color: #f5f5f5;">
                             </div>
                             <div class="auditor-entry">
                                 <h3>Q2</h3>
-                                <input type="text" class="auditor-name" placeholder="Auditor name">
-                                <input type="date" class="auditor-date" placeholder="Date">
+                                <input type="text" class="auditor-name" readonly placeholder="Will auto-populate" style="background-color: #f5f5f5;">
+                                <input type="date" class="auditor-date" readonly style="background-color: #f5f5f5;">
                             </div>
                             <div class="auditor-entry">
                                 <h3>Q3</h3>
-                                <input type="text" class="auditor-name" placeholder="Auditor name">
-                                <input type="date" class="auditor-date" placeholder="Date">
+                                <input type="text" class="auditor-name" readonly placeholder="Will auto-populate" style="background-color: #f5f5f5;">
+                                <input type="date" class="auditor-date" readonly style="background-color: #f5f5f5;">
                             </div>
                             <div class="auditor-entry">
                                 <h3>Q4</h3>
-                                <input type="text" class="auditor-name" placeholder="Auditor name">
-                                <input type="date" class="auditor-date" placeholder="Date">
+                                <input type="text" class="auditor-name" readonly placeholder="Will auto-populate" style="background-color: #f5f5f5;">
+                                <input type="date" class="auditor-date" readonly style="background-color: #f5f5f5;">
                             </div>
                         </div>
                     </div>
@@ -282,332 +281,9 @@
         </div>
 
         <div class="status-message" id="statusMessage"></div>
-        <!-- Audit Results Modal -->
-        <div class="audit-results-modal" id="auditResultsModal">
-            <div class="modal-overlay" onclick="closeAuditResults()"></div>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2><i class="fas fa-chart-bar"></i> Audit Results Summary</h2>
-                    <button class="modal-close" onclick="closeAuditResults()">&times;</button>
-                </div>
-
-
-        
-                <div class="modal-body">
-                    <!-- Audit Info -->
-                     <h3>Summary</h3>
-                     <!--start02-06 morning-->
-                    <div class="card shadow">
-                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">
-                                <i class="fas fa-table me-2"></i>
-                                5S Audit Summary - All Questions & All Quarters
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-4">
-                                
-            
-                                
-                            </div>
-                            
-                            <div class="audit-info-section">
-                                <div class="audit-info-item">
-                                    <span class="info-label">Auditor:</span>
-                                    <span class="info-value" id="modal-auditor">Not Specified</span>
-                                </div>
-                                <div class="audit-info-item">
-                                    <span class="info-label">Audit Date:</span>
-                                    <span class="info-value" id="modal-audit-date">Not Set</span>
-                                </div>
-                                <div class="audit-info-item">
-                                    <span class="info-label">Audit Site:</span>
-                                    <span class="info-value" id="">DOST Office</span>
-                                </div>
-                                <div class="audit-info-item">
-                                    <span class="info-label">Overall Status:</span>
-                                    <span class="info-value" id="modal-status">Not Started</span>
-                                </div>
-                            </div>
-
-                            <div class="table-container">
-                                <table id="summaryTable" class="table table-bordered table-hover">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th width="10%">Category</th>
-                                            <th width="10%">Sub Category</th>
-                                            <th width="5%">Q#</th>
-                                            <th width="45%">Question / Criteria</th>
-                                            <th width="7.5%">Q1 Score</th>
-                                            <th width="7.5%">Q2 Score</th>
-                                            <th width="7.5%">Q3 Score</th>
-                                            <th width="7.5%">Q4 Score</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="summaryTableBody">
-            <!-- This will be populated by JavaScript -->
-                                        <tr id="loadingRow">
-                                            <td colspan="8" class="text-center py-4">
-                                                <div class="text-muted">
-                                                    <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
-                                                    <h4>Loading Data...</h4>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <div class="mt-4">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="card bg-light">
-                                                <div class="card-body">
-                                                    <h6><i class="fas fa-calculator me-2"></i>Scoring Details</h6>
-                                                    <p class="mb-1"><strong>Total Questions:</strong> <span id="totalQuestionsCount">44</span></p>
-                                                    <p class="mb-1"><strong>Max Score per Question:</strong> 4</p>
-                                                    <p class="mb-0"><strong>Total Possible Score:</strong> <span id="totalPossibleScore">176</span> points per quarter</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-3 alert alert-warning">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
-                                            <div>
-                                                <strong>Important:</strong> Click "Load/Refresh Summary" to see your scores.
-                                                <br>
-                                                <small>If no scores appear, use the debug buttons (bottom-right) to add test data.</small>
-                                            </div>
-                                            <div class="btn-group" role="group" aria-label="Table controls">
-                                                <button class="btn btn-primary" onclick="populateSummaryTable()">
-                                                    <i class="fas fa-sync-alt"></i> Refresh Summary
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <h1>5S MATURITY LEVEL SUMMARY</h1>
-                                <div id="maturity-table-container">
-                                    <table class="sheet-summary-table maturity-table">
-                                        <thead>
-                                            <tr>
-                                                <th>MATURITY LEVEL</th>
-                                                <th>SORT</th>
-                                                <th>SYSTEMATIZE</th>
-                                                <th>SWEEP</th>
-                                                <th>STANDARDIZE</th>
-                                                <th>SELF-DISCIPLINE</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-            <!-- LEVEL 5 -->
-                                           <tr>
-                                                <td><strong>LEVEL 5<br><span style="font-size: 0.9em; font-weight: normal;">Focus on Prevention</span></strong></td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Employees are continually seeking improvement opportunities</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Anyone can walk into the work area and easily locate items. Abnormal conditions are visually obvious and corrective action measures are in place.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>    
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Area employees have devised a dependable and documented method of preventive cleaning and maintenance. Work area cleanliness and organization are a way of life.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Employees are continually seeking the elimination of waste, all changes are documented and information is shared with employees.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Employees maintain consistent standards in compliance with the 5S program.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                    
-        <!-- LEVEL 4     -->
-                                            <tr>
-                                                <td><strong>LEVEL 4<br><span style="font-size: 0.9em; font-weight: normal;">Focus on Consistency</span></strong></td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">A dependable documented method has been established to maintain a work area free of unnecessary items.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">A dependable and documented method has been established to recognize, with a visual sweep, if items are out of place or exceed quantity limits.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">5S schedules detailing tasks and responsibilities are understood and practiced.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Workplace method improvements are visible and understood by all employees.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Checklists exist showing that employees follow through on 5S schedules.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>LEVEL 3<br><span style="font-size: 0.9em; font-weight: normal;">Make it Visual</span></strong></td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">All unnecessary items have been removed from the work area.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Designnated locations are marked to make organization more visible.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">5S chedules detailing tasks and responsibilities are developed and utilized.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Workplace method improvements are being incorporated and documented.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">5S schedules detailing tasks and responsibilities have been developed and are utilized.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>LEVEL 2<br><span style="font-size: 0.9em; font-weight: normal;">Focus on Basics</span></strong></td>
-                                                <td>    
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Necessary and unnecessary items are separated.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                </div>
-                                            </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">A designated location has been established for all items.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Workplace areas are cleaned on a regularly scheduled basis.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Workplace methods are being improved, but changes have not been documented.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">A recognized effort has been made to improve the condition of the work environment.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>LEVEL 1<br><span style="font-size: 0.9em; font-weight: normal;">Just Beginning</span></strong></td>
-                                                <td>    
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Necessary and unnecessary items are mixed together in the work area.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Tools, supplies, books and materials are randomly located.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Workplace areas are dirty and disorganized.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">No attempt is being made to document or improve current processes.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="description-with-check">
-                                                        <span class="description-text">Mininmal attention is spent on housekeeping.</span>
-                                                        <span class="check-mark-right">✓</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    setTimeout(populateSummaryTable, 500);
-                                });
-                            </script>
-
-                        </div>
-                    </div>
-                    <!--end 02-06 morning-->
-                    
-                </div>    
-            
-            <!-- Quarter Selector -->
-                    
-                <!-- Add this to your <head> section -->
-                
-                <div>
-                    <button class="btn-action-plan" onclick="showOfficeActionPlan()">
-                        <i class="fas fa-print"></i> Office 5S Action Plan
-                    </button>
-                    <button class="btn-action-excel" onclick="exportCompleteAudit()">
-                        <i class="fas fa-file-excel"></i> Export Complete Audit
-                    </button>
-                    <button class="btn-action-print" onclick="exportAuditResults('summary')">
-                        <i class="fas fa-table"></i>Overview
-                    </button>
-                    <button class=" btn-action-close" onclick="closeAuditResults()">
-                        <i class="fas fa-times"></i>Close
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- JavaScript Files -->
     <script defer src="js/app.js"></script>
-
 </body>
 </html>

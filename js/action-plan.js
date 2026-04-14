@@ -1,5 +1,6 @@
 // action-plan.js - WITH OPEN ITEMS COUNTER, CATEGORY COUNTER, AND LOCALSTORAGE PERSISTENCE
 // UPDATED: Auto-populate description AND findings count from saved audit data
+// UPDATED: Auto-populate Date of Audit from main form dates (overwrites existing)
 
 // Wait for page to load
 document.addEventListener('DOMContentLoaded', function() {
@@ -12,11 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const areaAuditedElem = document.getElementById('area-audited');
     if (areaAuditedElem) {
         areaAuditedElem.textContent = params.get('site') || '__________________';
-    }
-    
-    const pointPersonElem = document.getElementById('point-person');
-    if (pointPersonElem) {
-        pointPersonElem.textContent = params.get('auditor') || '_________________';
     }
     
     const date = params.get('date') || new Date().toLocaleDateString('en-US', {
@@ -40,6 +36,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load audit state to get comments and findings
     loadAuditStateForComments();
+    
+    // Load quarter dates from main form and populate Date of Audit columns (OVERWRITES)
+    loadQuarterDatesFromMainForm();
     
     // Count open items and update the display
     updateOpenItemsCount();
@@ -141,6 +140,58 @@ function loadAuditStateForComments() {
     }
 }
 
+// Function to load quarter dates from main form and populate Date of Audit columns
+function loadQuarterDatesFromMainForm() {
+    try {
+        // Load the audit remarks data which contains quarter dates
+        const savedRemarks = localStorage.getItem('auditRemarksData');
+        if (!savedRemarks) {
+            console.log('No audit remarks data found');
+            return;
+        }
+        
+        const remarksData = JSON.parse(savedRemarks);
+        const quarterAuditors = remarksData.quarterAuditors || {};
+        
+        // Map quarters to their date values
+        const quarterDates = {
+            'Previous Audit': null,  // No auto-populate for previous audit
+            'First Quarter': quarterAuditors.Q1Date || '',
+            'Second Quarter': quarterAuditors.Q2Date || '',
+            'Third Quarter': quarterAuditors.Q3Date || '',
+            'Fourth Quarter': quarterAuditors.Q4Date || ''
+        };
+        
+        // Get all table containers
+        const tables = document.querySelectorAll('.table-container');
+        
+        tables.forEach(container => {
+            // Get the quarter title from the <p> element
+            const titleElem = container.querySelector('p');
+            if (!titleElem) return;
+            
+            const title = titleElem.textContent.trim();
+            const dateValue = quarterDates[title];
+            
+            // Only populate if we have a date value and it's not Previous Audit
+            if (dateValue && title !== 'Previous Audit') {
+                // Get all Date of Audit inputs (first column) in this table
+                const dateInputs = container.querySelectorAll('tbody tr td:first-child input[type="date"]');
+                
+                dateInputs.forEach(input => {
+                    // ALWAYS set to the quarter date from main form (overwrite existing)
+                    input.value = dateValue;
+                });
+                
+                console.log(`Populated ${dateInputs.length} date(s) for ${title} with ${dateValue}`);
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error loading quarter dates:', error);
+    }
+}
+
 // Function to get findings count for a specific question ID and quarter
 function getFindingsFromAudit(questionId, quarter) {
     if (!window.auditState) return '';
@@ -234,7 +285,6 @@ function saveActionPlanData() {
     
     const actionPlanData = {
         areaAudited: document.getElementById('area-audited')?.textContent || '',
-        pointPerson: document.getElementById('point-person')?.textContent || '',
         auditDate: document.getElementById('audit-date')?.textContent || '',
         tables: []
     };
@@ -320,13 +370,6 @@ function loadActionPlanData() {
             const areaAuditedElem = document.getElementById('area-audited');
             if (areaAuditedElem) {
                 areaAuditedElem.textContent = actionPlanData.areaAudited || '__________________';
-            }
-        }
-        
-        if (!params.get('auditor')) {
-            const pointPersonElem = document.getElementById('point-person');
-            if (pointPersonElem) {
-                pointPersonElem.textContent = actionPlanData.pointPerson || '_________________';
             }
         }
         
@@ -724,10 +767,40 @@ function addNewRowToTable(button) {
         cells.push(newRow.insertCell());
     }
     
-    // 1. Date of Audit
+    // 1. Date of Audit - Auto-populate from quarter date
     const dateInput = document.createElement('input');
     dateInput.type = 'date';
     dateInput.className = 'input-field';
+    
+    // Get the quarter title for this table and populate date
+    const titleElem = container.querySelector('p');
+    const title = titleElem ? titleElem.textContent.trim() : '';
+    
+    // Map quarter title to date
+    const quarterDateMap = {
+        'First Quarter': 'Q1Date',
+        'Second Quarter': 'Q2Date',
+        'Third Quarter': 'Q3Date',
+        'Fourth Quarter': 'Q4Date'
+    };
+    
+    const dateKey = quarterDateMap[title];
+    if (dateKey) {
+        try {
+            const savedRemarks = localStorage.getItem('auditRemarksData');
+            if (savedRemarks) {
+                const remarksData = JSON.parse(savedRemarks);
+                const quarterAuditors = remarksData.quarterAuditors || {};
+                const dateValue = quarterAuditors[dateKey];
+                if (dateValue) {
+                    dateInput.value = dateValue;
+                }
+            }
+        } catch (error) {
+            console.error('Error setting date for new row:', error);
+        }
+    }
+    
     dateInput.addEventListener('change', function() {
         saveActionPlanData();
     });
@@ -918,7 +991,6 @@ function saveActionPlanAsExcel() {
 function generateHTMLExcelFormat(openCount, categoryCounts) {
     // Get data
     const areaAudited = document.getElementById('area-audited')?.textContent || '__________________';
-    const pointPerson = document.getElementById('point-person')?.textContent || '_________________';
     const auditDate = document.getElementById('audit-date')?.textContent || '';
     
     // Start building HTML
@@ -1012,7 +1084,6 @@ function generateHTMLExcelFormat(openCount, categoryCounts) {
         
         <div class="header-info">
             <p><strong>Area Audited:</strong> ${areaAudited}</p>
-            <p><strong>5S Point Person:</strong> ${pointPerson}</p>
             <p><strong>Date:</strong> ${auditDate}</p>
         </div>
         
@@ -1078,7 +1149,7 @@ function generateHTMLExcelFormat(openCount, categoryCounts) {
                 html += `</tr>`;
             });
             
-            html += `</tbody></table>`;
+            html += `</tbody></tr>`;
             
             if (tableIndex < tables.length - 1) {
                 html += `<br><br>`;
